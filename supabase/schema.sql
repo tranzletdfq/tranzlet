@@ -9,7 +9,6 @@ create table public.profiles (
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- Enable RLS for Profiles
 alter table public.profiles enable row level security;
 create policy "Users can view own profile" on public.profiles for select using (auth.uid() = id);
 create policy "Users can update own profile" on public.profiles for update using (auth.uid() = id);
@@ -31,7 +30,6 @@ create table public.tranzlet_tags (
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- Enable RLS for Tags
 alter table public.tranzlet_tags enable row level security;
 create policy "Users can view own tags" on public.tranzlet_tags for select using (auth.uid() = user_id);
 create policy "Users can insert own tags" on public.tranzlet_tags for insert with check (auth.uid() = user_id);
@@ -88,3 +86,84 @@ create table public.withdrawal_requests (
 alter table public.withdrawal_requests enable row level security;
 create policy "Users can view own withdrawals" on public.withdrawal_requests for select using (auth.uid() = user_id);
 create policy "Users can insert own withdrawals" on public.withdrawal_requests for insert with check (auth.uid() = user_id);
+
+-- 7. Secure Atomic Withdrawal RPC Function
+create or replace function public.request_withdrawal_atomic(
+    p_bank_account_id uuid,
+    p_amount_ngn numeric
+)
+returns json
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+    v_user_id uuid;
+    v_current_balance numeric;
+    v_withdrawal_id uuid;
+    v_new_balance numeric;
+begin
+    v_user_id := auth.uid();
+
+    if v_user_id is null then
+        raise exception 'Unauthorized: No active session found.';
+    end if;
+
+    if p_amount_ngn is null or p_amount_ngn <= 0 then
+        raise exception 'Invalid withdrawal amount.';
+    end if;
+
+    -- Ensure the requested bank account belongs to the authenticated user.
+    if not exists (
+        select 1
+        from public.user_bank_accounts
+        where id = p_bank_account_id
+          and user_id = v_user_id
+    ) then
+        raise exception 'Invalid bank account.';
+    end if;
+
+    -- Lock the wallet row so concurrent withdrawals serialize safely.
+    select balance_ngn into v_current_balance
+    from public.wallets
+    where user_id = v_user_id
+    for update;
+
+    if not found then
+        raise exception 'Wallet not found.';
+    end if;
+
+    if v_current_balance < p_amount_ngn then
+        raise exception 'Insufficient wallet balance.';
+    end if;
+
+    v_new_balance := v_current_balance - p_amount_ngn;
+
+    update public.wallets
+    set balance_ngn = v_new_balance,
+        updated_at = timezone('utc'::text, now())
+    where user_id = v_user_id;
+
+    insert into public.withdrawal_requests (
+        user_id,
+        bank_account_id,
+        amount_ngn,
+        status
+    ) values (
+        v_user_id,
+        p_bank_account_id,
+        p_amount_ngn,
+        'PENDING'
+    )
+    returning id into v_withdrawal_id;
+
+    return json_build_object(
+        'success', true,
+        'withdrawal_id', v_withdrawal_id,
+        'new_balance', v_new_balance
+    );
+end;
+$$;
+
+revoke all on function public.request_withdrawal_atomic(uuid, numeric) from public;
+grant execute on function public.request_withdrawal_atomic(uuid, numeric) to authenticated;
