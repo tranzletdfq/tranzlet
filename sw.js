@@ -1,11 +1,13 @@
-const CACHE_NAME = 'tranzlet-shell-v1';
+const CACHE_NAME = 'tranzlet-shell-v2';
 const APP_SHELL = [
   '/',
   '/index.html',
   '/login.html',
   '/signup.html',
   '/dashboard.html',
-  '/manifest.json'
+  '/manifest.json',
+  '/icons/icon-192.svg',
+  '/icons/icon-512.svg'
 ];
 
 self.addEventListener('install', (event) => {
