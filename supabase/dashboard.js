@@ -1,5 +1,6 @@
 import { supabase } from './supabase.js';
 import { fetchUserDashboardData } from './dashboardService.js';
+import { fetchUserBankAccounts, addUserBankAccount } from './withdrawalService.js';
 
 const money = (value) => `₦${Number.parseFloat(value || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -32,6 +33,74 @@ const renderTags = (tags) => {
   `).join('');
 };
 
+const renderBankAccounts = (accounts) => {
+  const container = document.getElementById('bank-accounts-container');
+  if (!container) return;
+
+  if (!accounts?.length) {
+    container.innerHTML = '<p class="text-sm text-slate-400">No bank accounts saved.</p>';
+    return;
+  }
+
+  container.innerHTML = accounts.map((account) => {
+    const number = escapeHtml(account.account_number || '');
+    const masked = number.length > 4 ? `${'•'.repeat(Math.max(0, number.length - 4))}${number.slice(-4)}` : number;
+    return `<article class="rounded-xl border border-slate-200 p-4 flex items-center justify-between gap-4">
+      <div><p class="font-semibold">${escapeHtml(account.bank_name)}</p><p class="mt-1 text-xs text-slate-500">${escapeHtml(account.account_name)} · ${masked}</p></div>
+      <span class="text-xs font-medium text-slate-400">Saved</span>
+    </article>`;
+  }).join('');
+};
+
+const loadBankAccounts = async () => {
+  try {
+    const accounts = await fetchUserBankAccounts();
+    renderBankAccounts(accounts);
+  } catch (error) {
+    console.error('Bank account load failed:', error);
+    const container = document.getElementById('bank-accounts-container');
+    if (container) container.innerHTML = '<p class="text-sm text-red-600">We could not load your bank accounts. Please refresh and try again.</p>';
+  }
+};
+
+const bindBankAccountForm = () => {
+  const form = document.getElementById('bank-account-form');
+  if (!form) return;
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const button = document.getElementById('save-bank-account-btn');
+    const message = document.getElementById('bank-account-message');
+    const bankName = document.getElementById('bank-name-input').value;
+    const accountNumber = document.getElementById('account-number-input').value.replace(/\s+/g, '');
+    const accountName = document.getElementById('account-name-input').value;
+
+    if (!/^\d{10}$/.test(accountNumber)) {
+      message.textContent = 'Enter a valid 10-digit Nigerian account number.';
+      message.className = 'mt-3 text-sm text-red-600';
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = 'Saving…';
+    message.textContent = '';
+
+    try {
+      await addUserBankAccount(bankName, accountNumber, accountName);
+      form.reset();
+      message.textContent = 'Bank account saved.';
+      message.className = 'mt-3 text-sm text-emerald-600';
+      await loadBankAccounts();
+    } catch (error) {
+      message.textContent = error.message || 'Unable to save bank account.';
+      message.className = 'mt-3 text-sm text-red-600';
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Save bank account';
+    }
+  });
+};
+
 const load = async () => {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) {
@@ -49,6 +118,7 @@ const load = async () => {
     document.getElementById('withdraw-balance-display').textContent = balance;
     document.getElementById('tag-count-display').textContent = String(data.tags?.length || 0);
     renderTags(data.tags);
+    await loadBankAccounts();
   } catch (error) {
     console.error('Dashboard initialization failed:', error);
     document.getElementById('tags-ledger-container').innerHTML = '<p class="text-sm text-red-600">We could not load your account activity. Please refresh and try again.</p>';
@@ -71,4 +141,5 @@ document.getElementById('create-tag-btn')?.addEventListener('click', () => {
   alert('Payment tags are not available yet. Please check back later.');
 });
 
+bindBankAccountForm();
 load();
