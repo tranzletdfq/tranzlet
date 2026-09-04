@@ -38,7 +38,7 @@
       <section>
         <p class="text-orange text-xs font-bold uppercase tracking-[.16em]">Dashboard</p>
         <h1 class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight">Your account.</h1>
-        <p id="welcome-message" class="mt-2 text-slate-500">View your NGN balance and remittance activity.</p>
+        <p class="mt-2 text-slate-500">View your NGN balance and remittance activity.</p>
       </section>
 
       <section id="wallet" class="grid md:grid-cols-[1.5fr_1fr] gap-5">
@@ -55,7 +55,7 @@
       </section>
 
       <section id="tags" class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7">
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h2 class="text-xl font-semibold">Remittance tags</h2>
             <p class="mt-1 text-sm text-slate-500">Your latest transaction references and statuses.</p>
@@ -68,18 +68,47 @@
       </section>
 
       <section id="withdraw" class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7">
-        <h2 class="text-xl font-semibold">Withdraw</h2>
-        <p class="mt-1 text-sm text-slate-500">Request an NGN payout to a saved Nigerian bank account.</p>
-        <div class="mt-5 grid sm:grid-cols-2 gap-4">
-          <div class="rounded-xl border border-dashed border-slate-300 p-5 text-sm text-slate-500">Bank account and withdrawal controls will appear here.</div>
-          <div class="rounded-xl bg-slate-50 p-5 text-sm text-slate-500">Available balance: <strong id="withdraw-balance-display" class="text-navy">₦0.00</strong></div>
+        <div>
+          <h2 class="text-xl font-semibold">Withdraw</h2>
+          <p class="mt-1 text-sm text-slate-500">Payouts will be available here when the withdrawal service is enabled.</p>
+        </div>
+        <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-5">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold">Available balance</p>
+              <p id="withdraw-balance-display" class="mt-1 text-2xl font-bold">₦0.00</p>
+            </div>
+            <button type="button" disabled class="rounded-lg bg-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-400 cursor-not-allowed">Withdraw</button>
+          </div>
+          <p class="mt-4 text-xs text-slate-400">There is nothing to withdraw while your balance is ₦0.00.</p>
         </div>
       </section>
 
       <section id="banks" class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7">
-        <h2 class="text-xl font-semibold">Bank accounts</h2>
-        <p class="mt-1 text-sm text-slate-500">Manage the Nigerian bank accounts you use for payouts.</p>
-        <div id="bank-accounts-container" class="mt-5 text-sm text-slate-400">No bank accounts loaded yet.</div>
+        <div>
+          <h2 class="text-xl font-semibold">Bank accounts</h2>
+          <p class="mt-1 text-sm text-slate-500">Save a Nigerian bank account for future payouts.</p>
+        </div>
+
+        <form id="bank-account-form" class="mt-6 grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="bank-name-input" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Bank name</label>
+            <input id="bank-name-input" name="bankName" required maxlength="80" autocomplete="organization" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20" placeholder="e.g. Access Bank">
+          </div>
+          <div>
+            <label for="account-name-input" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Account name</label>
+            <input id="account-name-input" name="accountName" required maxlength="120" autocomplete="name" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20" placeholder="Account holder name">
+          </div>
+          <div>
+            <label for="account-number-input" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Account number</label>
+            <input id="account-number-input" name="accountNumber" required inputmode="numeric" maxlength="10" minlength="10" autocomplete="off" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20" placeholder="10-digit account number">
+          </div>
+          <div class="flex items-end">
+            <button id="save-bank-account-btn" type="submit" class="w-full rounded-lg bg-navy text-white px-4 py-2.5 text-sm font-semibold hover:opacity-95">Save bank account</button>
+          </div>
+        </form>
+        <p id="bank-account-message" class="mt-3 text-sm" aria-live="polite"></p>
+        <div id="bank-accounts-container" class="mt-6 space-y-3"><p class="text-sm text-slate-400">No bank accounts saved.</p></div>
       </section>
     </main>
   </div>
