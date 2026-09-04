@@ -3,6 +3,13 @@ import { fetchUserDashboardData } from './dashboardService.js';
 
 const money = (value) => `₦${Number.parseFloat(value || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
+const escapeHtml = (value) => String(value ?? '')
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#039;');
+
 const statusClass = (status) => {
   if (status === 'APPROVED') return 'bg-emerald-100 text-emerald-700';
   if (status === 'PROOF_SUBMITTED') return 'bg-amber-100 text-amber-700';
@@ -19,8 +26,8 @@ const renderTags = (tags) => {
   }
   container.innerHTML = tags.map((tag) => `
     <article class="rounded-xl border border-slate-200 p-4 flex items-center justify-between gap-4">
-      <div class="min-w-0"><p class="font-mono text-sm font-semibold truncate">${tag.reference_tag}</p><p class="mt-1 text-xs text-slate-500">$${tag.amount_usd} USD → ${money(tag.amount_ngn)}</p></div>
-      <span class="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${statusClass(tag.status)}">${tag.status}</span>
+      <div class="min-w-0"><p class="font-mono text-sm font-semibold truncate">${escapeHtml(tag.reference_tag)}</p><p class="mt-1 text-xs text-slate-500">$${escapeHtml(tag.amount_usd)} USD → ${money(tag.amount_ngn)}</p></div>
+      <span class="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${statusClass(tag.status)}">${escapeHtml(tag.status)}</span>
     </article>
   `).join('');
 };
