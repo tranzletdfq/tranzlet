@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0F172A">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.svg">
+  <script src="/pwa.js" defer></script>
+  <title>Admin — Tranzlet</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{navy:'#172033',orange:'#F97316'}}}}</script>
+</head>
+<body class="min-h-screen bg-slate-50 text-navy antialiased">
+<header class="border-b border-slate-200 bg-white"><div class="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between"><a href="./admin.html" class="text-2xl font-bold tracking-tight">tranzlet<span class="text-orange">.</span></a><button id="admin-sign-out" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold">Sign out</button></div></header>
+<main class="max-w-7xl mx-auto px-5 sm:px-8 py-8 space-y-7">
+  <section><p class="text-orange text-xs font-bold uppercase tracking-[.16em]">Administration</p><h1 class="mt-2 text-3xl font-semibold tracking-tight">Operations.</h1><p id="admin-email" class="mt-2 text-sm text-slate-500"></p></section>
+  <p id="admin-message" class="text-sm" aria-live="polite"></p>
+  <section class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7"><div class="flex items-center justify-between gap-4"><div><h2 class="text-xl font-semibold">Payment proof review</h2><p class="mt-1 text-sm text-slate-500">Review submitted remittance tags before wallet credit.</p></div><button id="refresh-tags" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold">Refresh</button></div><div id="admin-tags" class="mt-6 space-y-3"><p class="text-sm text-slate-400">Loading…</p></div></section>
+  <section class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7"><div><h2 class="text-xl font-semibold">Company payment handles</h2><p class="mt-1 text-sm text-slate-500">Manage the payment details shown to customers.</p></div><div id="admin-handles" class="mt-6 space-y-3"><p class="text-sm text-slate-400">Loading…</p></div></section>
+  <section class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7"><div><h2 class="text-xl font-semibold">Withdrawal requests</h2><p class="mt-1 text-sm text-slate-500">Review requests. Payout execution remains an operational step.</p></div><div id="admin-withdrawals" class="mt-6 space-y-3"><p class="text-sm text-slate-400">Loading…</p></div></section>
+</main>
+<script src="./env.js"></script><script type="module" src="./supabase/admin.js"></script>
+</body>
+</html>
