@@ -1,5 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="Tranzlet">
-  <rect width="192" height="192" rx="42" fill="#0F172A"/>
-  <path d="M48 55h96v22h-34v60H82V77H48z" fill="#F97316"/>
-  <path d="M117 108h27v29h-27z" fill="#fff" opacity=".96"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 512 512" role="img" aria-label="Tranzlet logo"><rect width="512" height="512" fill="#fff"/><g fill="#02244C"><path d="M147 359l23 24 23 17 36 19 18 7 1-1v-26l-2-2-34-16-29-22z"/><path d="M298 186l-20-17h-95l-30 37 73 1-100 118 9 17h84l-29-28z"/><path d="M247 84L132 115l-8 5-9 10-5 12v131l3 18 6 20 23-27-5-25V152l3-7 8-6 99-26z"/></g><g fill="#FE5F01"><path d="M402 150l-2 2-17 88-4 8-5 5v15l-5 27-11 27-18 26-20 19-31 20-26 11v28l15-5 27-13 29-19 25-23 13-16 10-16 14-34 5-25z"/><path d="M393 133l-99 30 25 23-108 128 27 26h77l31-37-70-1 76-89 18 18 2-1z"/><path d="M263 84v29l77 20h7l40-15-9-5z"/></g></svg>
