@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0F172A">
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/icons/icon-192.svg">
@@ -10,60 +10,53 @@
   <title>Account — Tranzlet</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{navy:'#172033',orange:'#F97316'}}}}</script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}body{overflow-x:hidden}button,a,input{transition:background-color .16s ease,border-color .16s ease,opacity .16s ease,box-shadow .16s ease,transform .16s ease}button:disabled{opacity:.6;cursor:not-allowed}button:not(:disabled):active{transform:translateY(1px)}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+  </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-navy antialiased">
-<header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
-  <div class="max-w-3xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-    <a href="./dashboard.html" class="text-2xl font-bold tracking-tight">tranzlet<span class="text-orange">.</span></a>
-    <button id="sign-out-btn" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50">Sign out</button>
-  </div>
-</header>
-<main class="max-w-3xl mx-auto px-5 sm:px-8 py-8 pb-16">
-  <div class="mb-7">
-    <p class="text-orange text-xs font-bold uppercase tracking-[.16em]">Account</p>
-    <h1 class="mt-2 text-3xl font-semibold tracking-tight">Account settings</h1>
-    <p class="mt-2 text-slate-500">Manage your profile and account details.</p>
-  </div>
-
-  <section class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7">
-    <h2 class="text-xl font-semibold">Profile</h2>
-    <form id="profile-form" class="mt-6 space-y-5">
-      <div>
-        <label for="full-name" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Full name</label>
-        <input id="full-name" required maxlength="120" autocomplete="name" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20">
-      </div>
-      <div>
-        <label for="phone-number" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Phone number</label>
-        <input id="phone-number" required maxlength="30" autocomplete="tel" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20">
-      </div>
-      <div>
-        <label for="email-address" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Email address</label>
-        <input id="email-address" type="email" readonly class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-500">
-        <p class="mt-1.5 text-xs text-slate-400">Your sign-in email is managed by your authentication account.</p>
-      </div>
-      <div class="flex justify-end">
-        <button id="save-profile-btn" type="submit" class="rounded-lg bg-orange px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600">Save changes</button>
-      </div>
-      <p id="profile-message" class="text-sm" aria-live="polite"></p>
-    </form>
-  </section>
-
-  <section class="mt-5 rounded-2xl bg-white border border-slate-200 p-6 sm:p-7">
-    <h2 class="text-xl font-semibold">Security</h2>
-    <div class="mt-5 flex items-center justify-between gap-5 rounded-xl border border-slate-200 p-4">
-      <div><p class="text-sm font-semibold">Password</p><p class="mt-1 text-xs text-slate-500">Change your sign-in password from your secure account.</p></div>
-      <button id="change-password-btn" type="button" class="shrink-0 rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold hover:bg-slate-50">Change</button>
+  <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-4 sm:px-6">
+      <a href="./dashboard.html" aria-label="Back to Tranzlet dashboard" class="text-[23px] font-bold tracking-[-0.04em]">tranzlet<span class="text-orange">.</span></a>
+      <button id="sign-out-btn" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50">Sign out</button>
     </div>
-    <p id="security-message" class="mt-3 text-sm" aria-live="polite"></p>
-  </section>
+  </header>
 
-  <section class="mt-5 rounded-2xl border border-red-100 bg-white p-6 sm:p-7">
-    <h2 class="text-xl font-semibold text-slate-900">Sign out</h2>
-    <p class="mt-1 text-sm text-slate-500">End your current Tranzlet session on this device.</p>
-    <button id="sign-out-secondary" type="button" class="mt-5 rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold hover:bg-slate-50">Sign out</button>
-  </section>
-</main>
-<script src="./env.js"></script>
-<script type="module" src="./supabase/account.js"></script>
+  <main class="mx-auto w-full max-w-3xl px-4 py-7 pb-14 sm:px-6 sm:py-10">
+    <div class="mb-7 sm:mb-9">
+      <p class="text-xs font-bold uppercase tracking-[.16em] text-orange">Account</p>
+      <h1 class="mt-2 text-[30px] font-semibold leading-tight tracking-[-.035em] sm:text-4xl">Account settings</h1>
+      <p class="mt-2 max-w-xl text-sm leading-6 text-slate-500">Manage your profile and account details.</p>
+    </div>
+
+    <section class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
+      <h2 class="text-xl font-semibold tracking-tight">Profile</h2>
+      <form id="profile-form" class="mt-6 space-y-5">
+        <div><label for="full-name" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Full name</label><input id="full-name" required maxlength="120" autocomplete="name" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20"></div>
+        <div><label for="phone-number" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Phone number</label><input id="phone-number" required maxlength="30" autocomplete="tel" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20"></div>
+        <div><label for="email-address" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Email address</label><input id="email-address" type="email" readonly class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-500"><p class="mt-1.5 text-xs leading-5 text-slate-400">Your sign-in email is managed by your authentication account.</p></div>
+        <div class="flex justify-stretch sm:justify-end"><button id="save-profile-btn" type="submit" class="w-full rounded-lg bg-orange px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600 sm:w-auto">Save changes</button></div>
+        <p id="profile-message" class="text-sm" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="mt-4 rounded-2xl border border-slate-200 bg-white p-5 sm:mt-5 sm:p-7">
+      <h2 class="text-xl font-semibold tracking-tight">Security</h2>
+      <div class="mt-5 rounded-xl border border-slate-200 p-4 sm:flex sm:items-center sm:justify-between sm:gap-5">
+        <div class="min-w-0"><p class="text-sm font-semibold">Password</p><p class="mt-1 text-xs leading-5 text-slate-500">Change your sign-in password from your secure account.</p></div>
+        <button id="change-password-btn" type="button" class="mt-4 w-full shrink-0 rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 sm:mt-0 sm:w-auto">Change</button>
+      </div>
+      <p id="security-message" class="mt-3 text-sm" aria-live="polite"></p>
+    </section>
+
+    <section class="mt-4 rounded-2xl border border-slate-200 bg-white p-5 sm:mt-5 sm:p-7">
+      <h2 class="text-xl font-semibold tracking-tight">Sign out</h2>
+      <p class="mt-1 text-sm leading-5 text-slate-500">End your current Tranzlet session on this device.</p>
+      <button id="sign-out-secondary" type="button" class="mt-5 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold hover:bg-slate-50 sm:w-auto">Sign out</button>
+    </section>
+  </main>
+  <script src="./env.js"></script>
+  <script type="module" src="./supabase/account.js"></script>
 </body>
 </html>
