@@ -1,11 +1,10 @@
 // Tranzlet PWA bootstrap.
-// The splash screen is an installed-app experience only; normal web visits stay instant.
+// Installed-app launches get the branded splash; normal browser visits remain immediate.
 (() => {
   const isInstalledApp =
     window.matchMedia('(display-mode: standalone)').matches ||
     window.navigator.standalone === true;
 
-  // Shared visual polish for every Tranzlet page.
   const style = document.createElement('style');
   style.id = 'tranzlet-global-polish';
   style.textContent = `
