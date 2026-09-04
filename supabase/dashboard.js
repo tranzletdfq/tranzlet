@@ -14,7 +14,7 @@ const renderTags = (tags) => {
   const container = document.getElementById('tags-ledger-container');
   if (!container) return;
   if (!tags?.length) {
-    container.innerHTML = '<p class="text-sm text-slate-400">No remittance tags yet. Create your first tag when you are ready.</p>';
+    container.innerHTML = '<p class="text-sm text-slate-400">No remittance tags yet.</p>';
     return;
   }
   container.innerHTML = tags.map((tag) => `
@@ -61,8 +61,7 @@ document.getElementById('sign-out-btn')?.addEventListener('click', async () => {
 });
 
 document.getElementById('create-tag-btn')?.addEventListener('click', () => {
-  window.location.hash = 'create-tag';
-  // The full tag creation workflow will be attached here in the next dashboard pass.
+  alert('Payment tags are not available yet. Please check back later.');
 });
 
 load();
