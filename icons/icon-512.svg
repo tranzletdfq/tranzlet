@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Tranzlet">
+  <rect width="512" height="512" rx="112" fill="#0F172A"/>
+  <path d="M128 147h256v59h-91v159h-74V206h-91z" fill="#F97316"/>
+  <path d="M312 288h72v77h-72z" fill="#fff" opacity=".96"/>
+</svg>
