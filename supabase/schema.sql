@@ -27,7 +27,7 @@ create table public.tranzlet_tags (
     sender_name text,
     transaction_identifier text,
     proof_image_url text,
-    expires_at timestamp with time zone default null, -- Open-ended architecture: no expiration
+    expires_at timestamp with time zone default null,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -47,3 +47,16 @@ create table public.wallets (
 
 alter table public.wallets enable row level security;
 create policy "Users can view own wallet" on public.wallets for select using (auth.uid() = user_id);
+
+-- 4. Company Static Inbound Payment Handles
+create table public.company_payment_handles (
+    id uuid default uuid_generate_v4() primary key,
+    asset_type text not null check (asset_type in ('PAYPAL', 'CASHAPP', 'USDT', 'BITCOIN')),
+    handle_name text not null,
+    handle_value text not null,
+    is_active boolean default true not null,
+    updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.company_payment_handles enable row level security;
+create policy "Anyone can view active company handles" on public.company_payment_handles for select using (is_active = true);
