@@ -5,17 +5,30 @@ import { fetchUserBankAccounts, addUserBankAccount } from './withdrawalService.j
 const money = (value) => `₦${Number.parseFloat(value || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const escapeHtml = (value) => String(value ?? '')
-  .replaceAll('&', '&amp;')
-  .replaceAll('<', '&lt;')
-  .replaceAll('>', '&gt;')
-  .replaceAll('"', '&quot;')
-  .replaceAll("'", '&#039;');
+  .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 
 const statusClass = (status) => {
   if (status === 'APPROVED') return 'bg-emerald-100 text-emerald-700';
   if (status === 'PROOF_SUBMITTED') return 'bg-amber-100 text-amber-700';
   if (status === 'REJECTED') return 'bg-red-100 text-red-700';
   return 'bg-slate-100 text-slate-600';
+};
+
+const showTagNotice = (message) => {
+  const existing = document.getElementById('tag-action-message');
+  if (existing) {
+    existing.textContent = message;
+    existing.className = 'mt-3 text-sm text-slate-500';
+    return;
+  }
+  const button = document.getElementById('create-tag-btn');
+  if (!button) return;
+  const notice = document.createElement('p');
+  notice.id = 'tag-action-message';
+  notice.className = 'mt-3 text-sm text-slate-500';
+  notice.textContent = message;
+  button.closest('section')?.querySelector('div')?.appendChild(notice);
 };
 
 const renderTags = (tags) => {
@@ -36,12 +49,10 @@ const renderTags = (tags) => {
 const renderBankAccounts = (accounts) => {
   const container = document.getElementById('bank-accounts-container');
   if (!container) return;
-
   if (!accounts?.length) {
     container.innerHTML = '<p class="text-sm text-slate-400">No bank accounts saved.</p>';
     return;
   }
-
   container.innerHTML = accounts.map((account) => {
     const number = escapeHtml(account.account_number || '');
     const masked = number.length > 4 ? `${'•'.repeat(Math.max(0, number.length - 4))}${number.slice(-4)}` : number;
@@ -54,8 +65,7 @@ const renderBankAccounts = (accounts) => {
 
 const loadBankAccounts = async () => {
   try {
-    const accounts = await fetchUserBankAccounts();
-    renderBankAccounts(accounts);
+    renderBankAccounts(await fetchUserBankAccounts());
   } catch (error) {
     console.error('Bank account load failed:', error);
     const container = document.getElementById('bank-accounts-container');
@@ -66,7 +76,6 @@ const loadBankAccounts = async () => {
 const bindBankAccountForm = () => {
   const form = document.getElementById('bank-account-form');
   if (!form) return;
-
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const button = document.getElementById('save-bank-account-btn');
@@ -80,11 +89,9 @@ const bindBankAccountForm = () => {
       message.className = 'mt-3 text-sm text-red-600';
       return;
     }
-
     button.disabled = true;
     button.textContent = 'Saving…';
     message.textContent = '';
-
     try {
       await addUserBankAccount(bankName, accountNumber, accountName);
       form.reset();
@@ -107,10 +114,8 @@ const load = async () => {
     window.location.replace('./login.html');
     return;
   }
-
   const userEmail = document.getElementById('user-email');
   if (userEmail) userEmail.textContent = session.user.email || '';
-
   try {
     const data = await fetchUserDashboardData();
     const balance = money(data.wallet?.balance_ngn);
@@ -131,14 +136,14 @@ document.getElementById('sign-out-btn')?.addEventListener('click', async () => {
   const { error } = await supabase.auth.signOut();
   if (error) {
     button.disabled = false;
-    alert('Unable to sign out. Please try again.');
+    showTagNotice('Unable to sign out. Please try again.');
     return;
   }
   window.location.replace('./login.html');
 });
 
 document.getElementById('create-tag-btn')?.addEventListener('click', () => {
-  alert('Payment tags are not available yet. Please check back later.');
+  showTagNotice('Payment tags are not available yet. Please check back later.');
 });
 
 bindBankAccountForm();
