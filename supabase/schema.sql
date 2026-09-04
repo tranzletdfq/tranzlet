@@ -60,3 +60,31 @@ create table public.company_payment_handles (
 
 alter table public.company_payment_handles enable row level security;
 create policy "Anyone can view active company handles" on public.company_payment_handles for select using (is_active = true);
+
+-- 5. User Saved Bank Accounts
+create table public.user_bank_accounts (
+    id uuid default uuid_generate_v4() primary key,
+    user_id uuid references public.profiles(id) on delete cascade not null,
+    bank_name text not null,
+    account_number text not null,
+    account_name text not null,
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.user_bank_accounts enable row level security;
+create policy "Users can view own bank accounts" on public.user_bank_accounts for select using (auth.uid() = user_id);
+create policy "Users can insert own bank accounts" on public.user_bank_accounts for insert with check (auth.uid() = user_id);
+
+-- 6. Withdrawal Requests Ledger
+create table public.withdrawal_requests (
+    id uuid default uuid_generate_v4() primary key,
+    user_id uuid references public.profiles(id) on delete cascade not null,
+    bank_account_id uuid references public.user_bank_accounts(id) not null,
+    amount_ngn numeric(14, 2) not null,
+    status text default 'PENDING' check (status in ('PENDING', 'PROCESSING', 'COMPLETED', 'REJECTED')),
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.withdrawal_requests enable row level security;
+create policy "Users can view own withdrawals" on public.withdrawal_requests for select using (auth.uid() = user_id);
+create policy "Users can insert own withdrawals" on public.withdrawal_requests for insert with check (auth.uid() = user_id);
