@@ -1,0 +1,6 @@
+# Keep Tranzlet's static HTML entry points explicit on Cloudflare Pages.
+/index.html /index.html 200
+/login.html /login.html 200
+/signup.html /signup.html 200
+/dashboard.html /dashboard.html 200
+/account.html /account.html 200
