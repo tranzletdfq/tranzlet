@@ -1,25 +1,19 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0F172A">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="apple-touch-icon" href="/icons/icon-192.svg">
-  <script src="/pwa.js" defer></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0F172A"><link rel="manifest" href="/manifest.json"><link rel="apple-touch-icon" href="/icons/icon-192.svg"><script src="/pwa.js" defer></script>
   <title>Admin — Tranzlet</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={theme:{extend:{colors:{navy:'#172033',orange:'#F97316'}}}}</script>
+  <script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={theme:{extend:{colors:{navy:'#172033',orange:'#F97316'}}}}</script>
+  <style>*{box-sizing:border-box}body{overflow-x:hidden}button,input{transition:background-color .18s ease,border-color .18s ease,opacity .18s ease,box-shadow .18s ease,transform .18s ease}button:disabled{opacity:.6;cursor:not-allowed}</style>
 </head>
 <body class="min-h-screen bg-slate-50 text-navy antialiased">
-<header class="border-b border-slate-200 bg-white"><div class="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between"><a href="./admin.html" class="text-2xl font-bold tracking-tight">tranzlet<span class="text-orange">.</span></a><button id="admin-sign-out" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold">Sign out</button></div></header>
-<main class="max-w-7xl mx-auto px-5 sm:px-8 py-8 space-y-7">
-  <section><p class="text-orange text-xs font-bold uppercase tracking-[.16em]">Administration</p><h1 class="mt-2 text-3xl font-semibold tracking-tight">Operations.</h1><p id="admin-email" class="mt-2 text-sm text-slate-500"></p></section>
-  <p id="admin-message" class="text-sm" aria-live="polite"></p>
-  <section class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7"><div class="flex items-center justify-between gap-4"><div><h2 class="text-xl font-semibold">Payment proof review</h2><p class="mt-1 text-sm text-slate-500">Review submitted remittance tags before wallet credit.</p></div><button id="refresh-tags" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold">Refresh</button></div><div id="admin-tags" class="mt-6 space-y-3"><p class="text-sm text-slate-400">Loading…</p></div></section>
-  <section class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7"><div><h2 class="text-xl font-semibold">Company payment handles</h2><p class="mt-1 text-sm text-slate-500">Manage the payment details shown to customers.</p></div><div id="admin-handles" class="mt-6 space-y-3"><p class="text-sm text-slate-400">Loading…</p></div></section>
-  <section class="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7"><div><h2 class="text-xl font-semibold">Withdrawal requests</h2><p class="mt-1 text-sm text-slate-500">Review requests. Payout execution remains an operational step.</p></div><div id="admin-withdrawals" class="mt-6 space-y-3"><p class="text-sm text-slate-400">Loading…</p></div></section>
+<header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur"><div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"><a href="./admin.html" class="text-2xl font-bold tracking-tight">tranzlet<span class="text-orange">.</span></a><button id="admin-sign-out" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50">Sign out</button></div></header>
+<main class="mx-auto max-w-7xl space-y-6 px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
+  <section><p class="text-xs font-bold uppercase tracking-[.16em] text-orange">Administration</p><h1 class="mt-2 text-3xl font-semibold tracking-tight">Operations.</h1><p id="admin-email" class="mt-2 text-sm text-slate-500"></p><p id="admin-message" class="mt-3 text-sm" aria-live="polite"></p></section>
+  <section class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7"><div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><h2 class="text-xl font-semibold">Payment proof review</h2><p class="mt-1 text-sm text-slate-500">Review sender details and proof before crediting the customer’s NGN wallet.</p></div><button id="refresh-tags" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold">Refresh</button></div><div id="admin-tags" class="mt-6 space-y-3"><p class="text-sm text-slate-400">Loading…</p></div></section>
+  <section class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7"><div><h2 class="text-xl font-semibold">Company payment accounts</h2><p class="mt-1 text-sm text-slate-500">Set the receiving account shown when a customer chooses a route.</p></div><div id="admin-handles" class="mt-6 grid gap-3 lg:grid-cols-2"><p class="text-sm text-slate-400">Loading…</p></div></section>
+  <section class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7"><div><h2 class="text-xl font-semibold">Withdrawal requests</h2><p class="mt-1 text-sm text-slate-500">Review the customer’s bank details and complete the payout operationally.</p></div><div id="admin-withdrawals" class="mt-6 space-y-3"><p class="text-sm text-slate-400">Loading…</p></div></section>
 </main>
 <script src="./env.js"></script><script type="module" src="./supabase/admin.js"></script>
-</body>
-</html>
+</body></html>
