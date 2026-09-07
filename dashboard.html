@@ -15,13 +15,14 @@
     *,*::before,*::after{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{overflow-x:hidden}
-    button,a,input{transition:background-color .18s ease,border-color .18s ease,opacity .18s ease,box-shadow .18s ease,transform .18s ease}
+    button,a,input,select{transition:background-color .18s ease,border-color .18s ease,opacity .18s ease,box-shadow .18s ease,transform .18s ease}
     button:disabled{opacity:.6;cursor:not-allowed}
     button:not(:disabled):active{transform:translateY(1px)}
-    .asset-card{min-height:132px;display:flex;align-items:center;gap:14px}
-    .asset-icon{width:52px;height:52px;min-width:52px;display:grid;place-items:center;border-radius:15px;font-weight:800;font-size:22px;letter-spacing:-.04em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
-    .asset-card:hover{border-color:#cbd5e1;box-shadow:0 10px 28px rgba(15,23,42,.07);transform:translateY(-1px)}
-    .asset-arrow{margin-left:auto;color:#94a3b8;font-size:25px;line-height:1}
+    .route-card{min-height:108px;display:flex;align-items:center;gap:12px}
+    .route-icon{width:52px;height:52px;min-width:52px;display:grid;place-items:center;border-radius:15px;font-weight:800;font-size:22px;letter-spacing:-.04em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+    .route-card:hover{border-color:#cbd5e1;box-shadow:0 10px 28px rgba(15,23,42,.07);transform:translateY(-1px)}
+    .route-arrow{margin-left:auto;color:#94a3b8;font-size:25px;line-height:1}
+    @media (max-width:420px){.route-card{min-height:126px;align-items:flex-start;flex-direction:column;padding:14px}.route-arrow{position:absolute;right:14px;top:18px}.route-icon{width:48px;height:48px;min-width:48px}.route-card{position:relative}}
     @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
   </style>
 </head>
@@ -53,7 +54,7 @@
       <section class="pt-1">
         <p class="text-xs font-bold uppercase tracking-[.16em] text-orange">Dashboard</p>
         <h1 class="mt-2 text-[30px] font-semibold leading-tight tracking-[-.035em] sm:text-4xl">Your account.</h1>
-        <p class="mt-2 max-w-xl text-sm leading-6 text-slate-500">View your NGN balance and remittance activity.</p>
+        <p class="mt-2 max-w-xl text-sm leading-6 text-slate-500">Receive supported remittances, track verification and withdraw your available NGN.</p>
       </section>
 
       <section id="wallet" class="grid gap-4 md:grid-cols-[minmax(0,1.45fr)_minmax(220px,.75fr)]">
@@ -73,62 +74,38 @@
         <div>
           <p class="text-xs font-bold uppercase tracking-[.16em] text-orange">Remittance tags</p>
           <h2 class="mt-2 text-2xl font-semibold tracking-[-.025em]">Choose a payment route.</h2>
-          <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500">Select the service you used to send your supported funds. Tag generation is not available yet.</p>
+          <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500">Choose where your sender is sending from. We’ll show the Tranzlet payment details, then you can submit the proof for review.</p>
         </div>
+        <div id="asset-selector" class="mt-6 grid grid-cols-2 gap-3 sm:gap-4"></div>
 
-        <div id="asset-selector" class="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="PayPal" aria-label="PayPal payment route">
-            <span class="asset-icon bg-[#003087] text-white">P</span><span class="min-w-0"><span class="block text-base font-semibold">PayPal</span><span class="mt-1 block text-sm text-slate-500">Online payments</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="Cash App" aria-label="Cash App payment route">
-            <span class="asset-icon bg-[#00D632] text-white">$</span><span class="min-w-0"><span class="block text-base font-semibold">Cash App</span><span class="mt-1 block text-sm text-slate-500">Mobile payments</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="Bitcoin" aria-label="Bitcoin digital asset">
-            <span class="asset-icon bg-[#F7931A] text-white">₿</span><span class="min-w-0"><span class="block text-base font-semibold">Bitcoin</span><span class="mt-1 block text-sm text-slate-500">Cryptocurrency</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="USDT" aria-label="USDT digital asset">
-            <span class="asset-icon bg-[#26A17B] text-white">₮</span><span class="min-w-0"><span class="block text-base font-semibold">USDT</span><span class="mt-1 block text-sm text-slate-500">Stablecoin</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="Wise" aria-label="Wise international transfer route">
-            <span class="asset-icon bg-[#9FE870] text-[#0B1F12]">7</span><span class="min-w-0"><span class="block text-base font-semibold">Wise</span><span class="mt-1 block text-sm text-slate-500">International transfers</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="Western Union" aria-label="Western Union money transfer route">
-            <span class="asset-icon bg-black text-[#FFD400] text-[17px]">WU</span><span class="min-w-0"><span class="block text-base font-semibold">Western Union</span><span class="mt-1 block text-sm text-slate-500">Money transfer</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="Skrill" aria-label="Skrill online payment route">
-            <span class="asset-icon bg-[#6A0DAD] text-white text-[16px]">S</span><span class="min-w-0"><span class="block text-base font-semibold">Skrill</span><span class="mt-1 block text-sm text-slate-500">Online payments</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="Revolut" aria-label="Revolut global finance route">
-            <span class="asset-icon bg-black text-white">R</span><span class="min-w-0"><span class="block text-base font-semibold">Revolut</span><span class="mt-1 block text-sm text-slate-500">Global finance</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="MoneyGram" aria-label="MoneyGram money transfer route">
-            <span class="asset-icon border border-red-100 bg-white text-[#D71920]">M</span><span class="min-w-0"><span class="block text-base font-semibold">MoneyGram</span><span class="mt-1 block text-sm text-slate-500">Money transfer</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="Binance" aria-label="Binance crypto exchange route">
-            <span class="asset-icon bg-[#111827] text-[#F3BA2F]">◇</span><span class="min-w-0"><span class="block text-base font-semibold">Binance</span><span class="mt-1 block text-sm text-slate-500">Crypto exchange</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="RIA" aria-label="RIA money transfer route">
-            <span class="asset-icon bg-[#F36C21] text-white text-[17px]">ria</span><span class="min-w-0"><span class="block text-base font-semibold">RIA</span><span class="mt-1 block text-sm text-slate-500">Money transfer</span></span><span class="asset-arrow">›</span>
-          </button>
-          <button type="button" class="asset-card group w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left sm:px-5" data-asset="Zelle" aria-label="Zelle bank transfer route">
-            <span class="asset-icon bg-[#6D28D9] text-white">Z</span><span class="min-w-0"><span class="block text-base font-semibold">Zelle</span><span class="mt-1 block text-sm text-slate-500">Bank transfer</span></span><span class="asset-arrow">›</span>
-          </button>
-        </div>
-
-        <div id="asset-action-message" class="mt-4 hidden rounded-xl border border-slate-200 bg-slate-50 px-4 py-3" role="status" aria-live="polite">
-          <p id="asset-action-title" class="text-sm font-semibold text-navy">Tags are not available yet.</p>
-          <p id="asset-action-copy" class="mt-1 text-sm text-slate-500">Please check back later.</p>
-        </div>
+        <section id="route-panel" class="mt-5 hidden rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6" aria-live="polite">
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0"><p class="text-xs font-bold uppercase tracking-[.16em] text-orange">Receive through</p><h3 id="route-panel-title" class="mt-2 text-xl font-semibold"></h3><p id="route-panel-copy" class="mt-1 text-sm leading-6 text-slate-500"></p></div>
+            <button id="route-panel-close" type="button" class="shrink-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50">Close</button>
+          </div>
+          <div id="route-handle-box" class="mt-5"></div>
+          <form id="remittance-proof-form" class="mt-5 grid gap-4 sm:grid-cols-2">
+            <div><label for="remittance-amount" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Amount sent (USD)</label><input id="remittance-amount" type="number" min="0.01" step="0.01" required class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20" placeholder="0.00"></div>
+            <div><label for="remittance-rate" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Agreed rate (₦ / USD)</label><input id="remittance-rate" type="number" min="0.01" step="0.01" required class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20" placeholder="Enter agreed rate"></div>
+            <div><label for="sender-name" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Sender name</label><input id="sender-name" type="text" required maxlength="120" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20" placeholder="Full name"></div>
+            <div><label for="transaction-id" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Transaction ID / reference</label><input id="transaction-id" type="text" required maxlength="160" class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20" placeholder="Payment reference"></div>
+            <div class="sm:col-span-2"><label for="payment-proof" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Payment proof</label><input id="payment-proof" type="file" required accept="image/jpeg,image/png,image/webp,application/pdf" class="mt-1.5 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm"></div>
+            <div class="sm:col-span-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><p class="text-xs leading-5 text-slate-500">Your NGN wallet is credited only after an administrator reviews and approves the proof.</p><button id="submit-remittance" type="submit" class="rounded-lg bg-navy px-5 py-2.5 text-sm font-semibold text-white hover:opacity-95">Submit payment proof</button></div>
+            <p id="remittance-form-message" class="sm:col-span-2" aria-live="polite"></p>
+          </form>
+        </section>
 
         <div id="tags-ledger-container" class="mt-6 space-y-3"></div>
       </section>
 
       <section id="withdraw" class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
-        <div><h2 class="text-xl font-semibold tracking-tight">Withdraw</h2><p class="mt-1 text-sm leading-5 text-slate-500">Payouts will be available here when the withdrawal service is enabled.</p></div>
-        <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-5">
-          <div class="flex items-center justify-between gap-4"><div><p class="text-sm font-semibold">Available balance</p><p id="withdraw-balance-display" class="mt-1 text-2xl font-bold tracking-tight">₦0.00</p></div><button type="button" disabled class="rounded-lg bg-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-400">Withdraw</button></div>
-          <p class="mt-4 text-xs leading-5 text-slate-400">There is nothing to withdraw while your balance is ₦0.00.</p>
-        </div>
+        <div><h2 class="text-xl font-semibold tracking-tight">Withdraw NGN</h2><p class="mt-1 text-sm leading-5 text-slate-500">Request a payout to one of your saved Nigerian bank accounts.</p></div>
+        <form id="withdrawal-form" class="mt-5 grid gap-4 sm:grid-cols-[1fr_180px_auto] sm:items-end">
+          <div><label for="withdraw-bank" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Bank account</label><select id="withdraw-bank" required class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20"><option value="">Select saved account</option></select></div>
+          <div><label for="withdraw-amount" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Amount (₦)</label><input id="withdraw-amount" type="number" min="1" step="0.01" required class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-orange focus:ring-2 focus:ring-orange/20" placeholder="0.00"></div>
+          <button id="withdraw-submit" type="submit" class="rounded-lg bg-orange px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600">Request withdrawal</button>
+        </form>
+        <p id="withdrawal-message" class="mt-3 text-sm" aria-live="polite"></p>
       </section>
 
       <section id="banks" class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
