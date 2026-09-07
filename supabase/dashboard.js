@@ -15,20 +15,23 @@ const statusClass = (status) => {
   return 'bg-slate-100 text-slate-600';
 };
 
-const showTagNotice = (message) => {
-  const existing = document.getElementById('tag-action-message');
-  if (existing) {
-    existing.textContent = message;
-    existing.className = 'mt-3 text-sm text-slate-500';
-    return;
-  }
-  const button = document.getElementById('create-tag-btn');
-  if (!button) return;
-  const notice = document.createElement('p');
-  notice.id = 'tag-action-message';
-  notice.className = 'mt-3 text-sm text-slate-500';
-  notice.textContent = message;
-  button.closest('section')?.querySelector('div')?.appendChild(notice);
+const showAssetUnavailable = (asset) => {
+  const message = document.getElementById('asset-action-message');
+  const title = document.getElementById('asset-action-title');
+  const copy = document.getElementById('asset-action-copy');
+  if (!message || !title || !copy) return;
+
+  title.textContent = `${asset} tags are not available yet.`;
+  copy.textContent = 'Please check back later.';
+  message.classList.remove('hidden');
+
+  message.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+};
+
+const bindAssetSelector = () => {
+  document.querySelectorAll('[data-asset]').forEach((button) => {
+    button.addEventListener('click', () => showAssetUnavailable(button.dataset.asset));
+  });
 };
 
 const renderTags = (tags) => {
@@ -136,15 +139,11 @@ document.getElementById('sign-out-btn')?.addEventListener('click', async () => {
   const { error } = await supabase.auth.signOut();
   if (error) {
     button.disabled = false;
-    showTagNotice('Unable to sign out. Please try again.');
     return;
   }
   window.location.replace('./login.html');
 });
 
-document.getElementById('create-tag-btn')?.addEventListener('click', () => {
-  showTagNotice('Payment tags are not available yet. Please check back later.');
-});
-
+bindAssetSelector();
 bindBankAccountForm();
 load();
